@@ -9,7 +9,7 @@ Has already a sample module called _func1_ with some unit tests and mocks to eas
 
 ## Sample usage
 
-To test that your setup is ready, run the following commands. If not, go to [Installation and SetUp](installation-and-setup).
+To test that your setup is ready, run the following commands. If not, go to [Installation and SetUp](#installation-and-setup).
 
 ```sh
 scons MOCK=yes # Creates mock files
