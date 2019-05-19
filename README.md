@@ -1,7 +1,7 @@
 # C Test Driven Development boilerplate
 > Ready to go boilerplate for doing TDD with C and SCons as builder.
 
-Boilerplate for C development using TDD and SCons.
+Boilerplate for C development using TDD and [SCons](https://github.com/SCons/scons).
 
 Uses [Unity](https://github.com/ThrowTheSwitch/Unity/) for unit testing and [CMock](https://github.com/ThrowTheSwitch/CMock/) to create mocks.
 
