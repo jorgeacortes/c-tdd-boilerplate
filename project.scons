@@ -1,0 +1,104 @@
+#!python
+# Main SConscript file for the project
+import os
+
+#*************************
+# Input arguments definition
+#*************************
+vars = Variables(None, ARGUMENTS)
+vars.AddVariables(
+    EnumVariable('BUILD_TYPE', 'type of build to use', 'debug',  allowed_values=('debug', 'release')),
+    EnumVariable('MOCK', 'Launch CMock or not', 'no',  allowed_values=('no', 'yes')),
+    EnumVariable('TEST_ONLY', 'Compile only tests', 'no',  allowed_values=('no', 'yes')),
+    )
+
+#*************************
+# Config
+#*************************
+
+ccflags_list = [
+    "-Wall", #Show compiler warnings
+    ]
+
+# Include Path
+include_path_list = [ #TODO: Pending to include all header files recursively
+    '#/src/func1/',
+    ]
+
+library_path_list = [
+    '#/build/src/', # Needed for both app and test
+]
+
+library_list =[
+    '', # For including external libraries
+]
+
+build_scripts = [
+    'src/app.scons',    # App project
+    'tests/test.scons', # Test project
+]
+
+defines_list = [    # List of defines to include
+    'TAG1'          # Sample tag in func1, remove as needed
+]
+
+mocks_list = (      # String with all headers files to mock
+    "../src/func1/Mod1.h "
+    #"../src/func1/yyy.h "
+)
+
+#*************************
+# Methods
+#*************************
+def printCCFLAGS():
+    print "CCFLAGS =", main_env['CCFLAGS']
+
+# Method for creating all mocks using CMock
+def buildMocks():
+    os.system("ruby ../vendor/CMock/lib/cmock.rb -o../tests/cmock.yml "+mocks_list)
+    exit()
+
+#*************************
+# Script
+#*************************
+
+print "[Info] Starting main.scons"
+
+main_env = Environment(
+    variables =     vars,               # For input argumetns
+    TARGET_ARCH =   'x86',              # Otherwise use x86_64
+    CPPPATH =       include_path_list,
+    CCFLAGS =       ccflags_list,
+    LIBPATH =       library_path_list,
+    LIBS =          library_list,
+    CPPDEFINES =    defines_list,
+)
+
+#*************************
+# Arguments processing
+#*************************
+
+if main_env.GetOption('clean'):
+    Delete("../build") # Not working TODO delete build folder for Windows and Linux
+
+if main_env['BUILD_TYPE'] == 'debug':
+    print '*** debug build.'
+
+if main_env['BUILD_TYPE'] == 'release':
+    print '*** release build.'
+
+if main_env['MOCK'] == 'yes':
+    print '*** Creating mocks with CMock.'
+    buildMocks()
+
+#*************************
+# Debug console printing
+#*************************
+printCCFLAGS()
+
+# Launch all SConscripts
+for script in build_scripts:
+    env = main_env.Clone()
+    SConscript(script, exports=['env'])
+
+print "[Info] Finished main.scons"

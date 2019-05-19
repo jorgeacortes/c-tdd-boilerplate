@@ -1,0 +1,26 @@
+# App production code SConscript
+import os
+Import('env')
+appEnv = env.Clone()
+# --------------- Application SConscript ---------------- #
+
+# Take all sources
+lib_sources=[
+    Glob('func1/*.c'),
+]
+
+# Create a lib with all sources
+productioncode_lib = appEnv.StaticLibrary('productioncode_lib', lib_sources)
+
+appEnv.Prepend(
+    LIBS = [productioncode_lib]
+)
+
+#And then we compile the program including the library.
+if appEnv['TEST_ONLY'] == 'no':
+    bin_main = appEnv.Program(
+        'app',
+        ['main.c']
+    )
+else:
+    print   "[Info] Not building the app"

@@ -1,0 +1,9 @@
+:cmock:
+  :mock_path: ../tests/mocks
+  :plugins:
+    - :ignore
+    - :ignore_arg       # To ignore a specific argument of an expected call
+    - :expect_any_args  # To ignore all arguments in an expected call
+    - :array
+    - :callback
+    - :return_thru_ptr  # For mocking variables returned by a pointer
