@@ -9,9 +9,10 @@ Has already a sample module called _func1_ with some unit tests and mocks to eas
 
 ## Sample usage
 
-To test that your setup is ready, run the following commands. If not, go to [Installation and SetUp](#installation-and-setup).
+To test that your setup is ready, run the following commands. If not, go to [Requirements](#requirements).
 
 ```sh
+git clone --recursive https://github.com/jorgeacortes/c-tdd-boilerplate
 scons MOCK=yes # Creates mock files
 scons # Builds the app and tests
 ```
@@ -29,24 +30,11 @@ To include your code you need to modify at least:
   * tests_lib_sources: include all sources to compile (mocks and tests)
   * Add more runners if needed
 
-## Installation and SetUp
-
-### Requirements
+## Requirements
 
 * Ruby (for CMock)
 * Python (for SCons)
-* Pip
-
-### Steps
-
-```sh
-git clone --recursive https://github.com/jorgeacortes/c-tdd-boilerplate
-pip install scons # Install SCons throgh pip
-cd vendor/CMock
-bundle install # Installs CMock, ensures you have all RubyGems needed
-scons MOCK=yes # Creates Mock files
-scons # Builds the app and tests
-```
+* SCons
 
 ## Release History
 
