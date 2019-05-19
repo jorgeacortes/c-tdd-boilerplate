@@ -9,7 +9,7 @@ Has already a sample module called _func1_ with some unit tests and mocks to eas
 
 ## Sample usage
 
-To test that your setup is ready, run the following commands. If not, go to [Installation and SetUp](installation).
+To test that your setup is ready, run the following commands. If not, go to [Installation and SetUp](installation-and-setup).
 
 ```sh
 scons MOCK=yes # Creates mock files
@@ -29,7 +29,7 @@ To include your code you need to modify at least:
   * tests_lib_sources: include all sources to compile (mocks and tests)
   * Add more runners if needed
 
-## [Installation and SetUp](installation)
+## Installation and SetUp
 
 ### Requirements
 
