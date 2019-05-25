@@ -3,24 +3,28 @@ import os
 Import('env')
 appEnv = env.Clone()
 # --------------- Application SConscript ---------------- #
+print '[Info] app.scons launching.'
 
 # Take all sources
-lib_sources=[
+productionCode_sources=[
     Glob('func1/*.c'),
 ]
 
-# Create a lib with all sources
-productioncode_lib = appEnv.StaticLibrary('productioncode_lib', lib_sources)
+productionCodeObjs = []
+# Create an object with all sources
+for source in productionCode_sources:
+    productionCodeObjs.extend(appEnv.Object(source))
 
-appEnv.Prepend(
-    LIBS = [productioncode_lib]
-)
+Export('productionCodeObjs') # Will be used for compiling tests
 
 #And then we compile the program including the library.
 if appEnv['TEST_ONLY'] == 'no':
     bin_main = appEnv.Program(
-        'app',
-        ['main.c']
+        target = appEnv['tgtDir'] + appEnv['tgtName'],
+        source = [
+            'main.c',
+            productionCodeObjs,
+        ]
     )
 else:
     print   "[Info] Not building the app"

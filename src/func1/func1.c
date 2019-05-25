@@ -10,13 +10,19 @@ static void send_error(){
 
 int func1(void) {
 	int x;
+	unsigned char *ptr = 0;
+	int a = 0;
+
+	a = 1;
 	#ifdef TAG1
 		printf("Tag1 found\n");
 	#endif 
 	printf("Input an integer\n");
 	scanf("%d", &x);
 	printf("The integer is: %d\n", x);
-
+	a = 3;
+	ptr=&a;
+	
 	return 0;
 }
 

@@ -1,7 +1,8 @@
 #!python
 # Main SConscript file for the project
 import os
-
+import platform
+Import('cwd')
 #*************************
 # Input arguments definition
 #*************************
@@ -16,21 +17,28 @@ vars.AddVariables(
 # Config
 #*************************
 
+tgtDir = '#/build/' # <#/Dir> is relative to SConstruct file directory
+tgtName = 'app'
+
 ccflags_list = [
     "-Wall", #Show compiler warnings
+    #'-O2',  # Breaks Unity?
+    #'-m32'
     ]
 
 # Include Path
-include_path_list = [ #TODO: Pending to include all header files recursively
+include_path_list = [ #TODO: Pending to include all header files recursively?
     '#/src/func1/',
     ]
 
+# Common libraries for both app and test
 library_path_list = [
-    '#/build/src/', # Needed for both app and test
+    '#/build/src/', 
 ]
 
+# For including external libraries
 library_list =[
-    '', # For including external libraries
+    '', 
 ]
 
 build_scripts = [
@@ -42,27 +50,39 @@ defines_list = [    # List of defines to include
     'TAG1'          # Sample tag in func1, remove as needed
 ]
 
-mocks_list = (      # String with all headers files to mock
-    "../src/func1/Mod1.h "
-    #"../src/func1/yyy.h "
+# String with all headers files to mock finishing with a space as separation
+mocks_list = (      
+    cwd + "/src/func1/Mod1.h "
+    #cwd + "/src/func1/yyy.h "
 )
+
+tools_list = [
+    'default'
+]
+
+if platform.system()=='Windows':
+    tools_list = ['mingw']
+    print '[Info] Using MinGw'
 
 #*************************
 # Methods
 #*************************
 def printCCFLAGS():
-    print "CCFLAGS =", main_env['CCFLAGS']
+    print "[Info] Common CCFLAGS =", main_env['CCFLAGS']
 
 # Method for creating all mocks using CMock
 def buildMocks():
-    os.system("ruby ../vendor/CMock/lib/cmock.rb -o../tests/cmock.yml "+mocks_list)
+    cmockpath = os.path.join(cwd,"vendor","CMock","lib","cmock.rb")
+    cmockargs = "-o" + os.path.join(cwd,"tests","cmock.yml")
+    os.system("ruby "+ cmockpath+ " " + cmockargs + " " + mocks_list )
     exit()
 
 #*************************
 # Script
 #*************************
 
-print "[Info] Starting main.scons"
+print "[Info] Starting project.scons"
+print '[Info] cwd = ', cwd
 
 main_env = Environment(
     variables =     vars,               # For input argumetns
@@ -72,23 +92,38 @@ main_env = Environment(
     LIBPATH =       library_path_list,
     LIBS =          library_list,
     CPPDEFINES =    defines_list,
+    TOOLS =         tools_list,
+    tgtDir =        tgtDir,
+    tgtName =       tgtName,
+    cwd =           cwd
 )
+
 
 #*************************
 # Arguments processing
 #*************************
 
 if main_env.GetOption('clean'):
-    Delete("../build") # Not working TODO delete build folder for Windows and Linux
+    print '[Info] Cleaning extra files.'
+    Clean(
+        tgtName,              # Target
+        [                       # Files or directories to remove
+            "#/build/*",        # We can't remove build folder
+            "#/tests/mocks",
+        ]
+    )
 
 if main_env['BUILD_TYPE'] == 'debug':
-    print '*** debug build.'
+    main_env.Append(
+        CCFLAGS = '-g'  # Debug flag
+    )
+    print '[Info] Debug build.'
 
 if main_env['BUILD_TYPE'] == 'release':
-    print '*** release build.'
+    print '[Info] Release build.'
 
 if main_env['MOCK'] == 'yes':
-    print '*** Creating mocks with CMock.'
+    print '[Info] Creating mocks with CMock.'
     buildMocks()
 
 #*************************
