@@ -2,62 +2,64 @@
 # TODO Run all runners after build.
 import os
 Import('env')
+Import('productionCodeObjs')
 envTest = env.Clone()
 
+testRelativePath = '..' # With <#> it creates also object files at vendor folder.
+
+unity_path = testRelativePath + '/vendor/Unity/src/'
+cmock_path = testRelativePath + '/vendor/CMock/src/'
 
 # --------------- Support libraries ---------------- #
+print '[Info] test.scons launching.'
 
-# Create lib for Unity
+# Create lib for Unity and CMock
 envTest.Append(
-        CPPPATH =       '../vendor/Unity/src',
+    CPPPATH = [
+        unity_path,
+        cmock_path,
+    ]
 )
-unityEnv = envTest.Clone()
-unity_lib = unityEnv.StaticLibrary(
-    'unity',
-    '../vendor/Unity/src/unity.c',
-    )
 
-# Create lib for Cmock
-envTest.Append(
-        CPPPATH =       '../vendor/CMock/src',
+unity_lib = envTest.StaticLibrary(
+    target = 'UnityCmock',
+    source = [
+        unity_path+'unity.c',
+        cmock_path+'cmock.c',
+    ]
 )
-cmockEnv = envTest.Clone()
-cmock_lib = unityEnv.StaticLibrary(
-    'cmock',
-    '../vendor/CMock/src/cmock.c',
-    )
-
 
 # --------------- Tests -------------------------- #
 
 # Take all sources
-tests_lib_sources=[
+tests_sources=[
     Glob('mocks/*.c')
 ]
 
-# Create a lib with all test sources
-tests_lib = envTest.StaticLibrary('mytest', tests_lib_sources)
+#Printing results of the Glob
+""" print '*******************'
+for items in tests_sources:
+    print items
+    for i in items:
+        print i
+print '*******************' """
 
-# Libraries for building tests
-tests_libs=[ 
-    'productioncode_lib',
-    tests_lib,
-    unity_lib,
-    cmock_lib, 
-]
-
-# Include paths
-tests_CPPATHS = [ 
-    "mocks",
+# Include paths (CPPATHS)
+tests_inc = [ 
+    'mocks',
 ]
 
 envTest.Append(
-    LIBS = tests_libs,
-    CPPPATH = tests_CPPATHS,
+    LIBS = unity_lib,
+    CPPPATH = tests_inc
 )
+
+testCodeObjs = []
+for source in tests_sources:
+    testCodeObjs.extend(envTest.Object(source))
 
 # And then we compile the test including the library.
 runner1_bin = envTest.Program(
-    'testRunner1',
-    ['runner1.c']
+    target = envTest['tgtDir'] + 'testRunner1',
+    source = ['runner1.c', productionCodeObjs, testCodeObjs]
 )
