@@ -16,6 +16,7 @@ git clone --recursive https://github.com/jorgeacortes/c-tdd-boilerplate
 scons MOCK=yes # Creates mock files
 scons # Builds the app and tests
 ```
+Build.py is a file included in order to manage usual builds. Instead of using scons directly, Build.py can be used generating a logfile.
 
 ## Including your code
 
@@ -25,9 +26,9 @@ To include your code you need to modify at least:
   * include_path_list: add all include paths for production code or common ones.
   * mocks_list: in case mocks are needed.
 * app.scons
-  * lib_sources: include all sources to compile
+  * productionCode_sources: include all sources to compile
 * test.scons
-  * tests_lib_sources: include all sources to compile (mocks and tests)
+  * tests_sources: include all sources to compile (mocks and tests)
   * Add more runners if needed
 
 ## Requirements
@@ -47,9 +48,4 @@ Feel free to contribute opening issues or pull requests.
 
 ## To do list
 
-* Launch all runners option
-* Colorize scons console output
-* Colorize tests console outputs
-* Implement debug/release mode
-* Try to include all header paths inside a path
-* Delete build folder after a clean
+* Automatically launch all runners and show results.
