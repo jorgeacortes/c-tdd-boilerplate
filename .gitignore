@@ -1,3 +1,5 @@
 /build
 /tests/mocks
 .sconsign.dblite
+.vscode/
+!.vscode/launch.json

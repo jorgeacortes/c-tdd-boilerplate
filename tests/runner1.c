@@ -1,5 +1,5 @@
 #include "unity.h"		// Unit test
-#include "stdio.h"		// Only for Windows
+#include "stdio.h"
 
 /* Mocked headers */
 #include "MockMod1.h"	

@@ -1,7 +1,6 @@
 #!python
 # Main SConscript file for the project
-import os
-import platform
+import os, platform, datetime
 Import('cwd')
 #*************************
 # Input arguments definition
@@ -20,9 +19,18 @@ vars.AddVariables(
 tgtDir = '#/build/' # <#/Dir> is relative to SConstruct file directory
 tgtName = 'app'
 
+compStr = (
+    "********************************************************************************\n"
+    "[Compiling] $TARGET\n"
+    "--------------------------------------------------------------------------------")
+linkStr = (
+    "********************************************************************************\n"
+    "[Linking] $TARGET\n"
+    "--------------------------------------------------------------------------------")
+
 ccflags_list = [
-    "-Wall", #Show compiler warnings
-    #'-O2',  # Breaks Unity?
+    "-Wall",    # Show compiler warnings
+    #'-O2',     # Breaks Unity?
     #'-m32'
     ]
 
@@ -52,37 +60,40 @@ defines_list = [    # List of defines to include
 
 # String with all headers files to mock finishing with a space as separation
 mocks_list = (      
-    cwd + "/src/func1/Mod1.h "
-    #cwd + "/src/func1/yyy.h "
+    os.path.join(cwd,"src","func1","Mod1.h")
+    #os.path.join(cwd,"src","func1","yyyy.h")
 )
 
 tools_list = [
     'default'
 ]
 
-if platform.system()=='Windows':
-    tools_list = ['mingw']
-    print '[Info] Using MinGw'
-
 #*************************
 # Methods
 #*************************
-def printCCFLAGS():
-    print "[Info] Common CCFLAGS =", main_env['CCFLAGS']
-
 # Method for creating all mocks using CMock
 def buildMocks():
     cmockpath = os.path.join(cwd,"vendor","CMock","lib","cmock.rb")
     cmockargs = "-o" + os.path.join(cwd,"tests","cmock.yml")
-    os.system("ruby "+ cmockpath+ " " + cmockargs + " " + mocks_list )
-    exit()
+    cmockCmd = "ruby "+ cmockpath+ " " + cmockargs + " " + mocks_list
+    print cmockCmd
+    ret = os.system(cmockCmd)
+    print "********************************************************************************"
+    print "[Info] Finished project.scons mocks creation"
+    print "********************************************************************************"  
+    exit(ret)
 
 #*************************
 # Script
 #*************************
-
-print "[Info] Starting project.scons"
+print "********************************************************************************"
+print "[Info] Starting project.scons ",datetime.datetime.now()
+print "********************************************************************************"
 print '[Info] cwd = ', cwd
+
+if platform.system()=='Windows':
+    tools_list = ['mingw']
+    print '[Info] Windows OS detected: using MinGw'
 
 main_env = Environment(
     variables =     vars,               # For input argumetns
@@ -93,9 +104,12 @@ main_env = Environment(
     LIBS =          library_list,
     CPPDEFINES =    defines_list,
     TOOLS =         tools_list,
-    tgtDir =        tgtDir,
-    tgtName =       tgtName,
-    cwd =           cwd
+    CCCOMSTR =      compStr,
+    LINKCOMSTR =    linkStr,
+    # Custom parameters
+    tgtDir =        tgtDir,             # Target directory
+    tgtName =       tgtName,            # Target name
+    cwd =           cwd,                # Parent cwd
 )
 
 
@@ -106,10 +120,11 @@ main_env = Environment(
 if main_env.GetOption('clean'):
     print '[Info] Cleaning extra files.'
     Clean(
-        tgtName,              # Target
+        tgtName,                # Target
         [                       # Files or directories to remove
-            "#/build/*",        # We can't remove build folder
+            "#/build/*",        # We shouldn't remove build folder
             "#/tests/mocks",
+            "#build/log.txt",
         ]
     )
 
@@ -129,11 +144,17 @@ if main_env['MOCK'] == 'yes':
 #*************************
 # Debug console printing
 #*************************
-printCCFLAGS()
+print "[Info][main_env] CC =", main_env['CC']
+print "[Info][main_env] TARGET_ARCH =", main_env['TARGET_ARCH']
+print "[Info][main_env] CCFLAGS =", main_env['CCFLAGS']
+print "[Info][main_env] CPPDEFINES =", main_env['CPPDEFINES']
 
 # Launch all SConscripts
+print "--------------------------------------------------------------------------------"
 for script in build_scripts:
     env = main_env.Clone()
     SConscript(script, exports=['env'])
 
-print "[Info] Finished main.scons"
+print "********************************************************************************"
+print "[Info] Finished project.scons"
+print "********************************************************************************"

@@ -1,5 +1,5 @@
 :cmock:
-  :mock_path: ../tests/mocks
+  :mock_path: ../tests/mocks  # Relative to #/build/
   :plugins:
     - :ignore
     - :ignore_arg       # To ignore a specific argument of an expected call

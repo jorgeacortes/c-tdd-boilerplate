@@ -1,10 +1,17 @@
 #include "func1.h"
-//#define EXTERNAL // This define is to include Mod1 calls which is not available.
+#define EXTERNAL // This define is to include Mod1 calls which is not available.
 static void send_error();
+static void send_ok();
 
 static void send_error(){
 	#ifdef EXTERNAL
 		Mod1_write_signal_error(0x25);
+	#endif
+}
+
+static void send_ok(){
+	#ifdef EXTERNAL
+		Mod1_write_signal_error(0x0);
 	#endif
 }
 
@@ -39,6 +46,7 @@ dTu8 receiveInputAndReturnBoolean(void){
 
 	if( (1 == a) && (b == 0x10) && (c == 0)){
 		retVal = 1;
+		send_ok();
 	}
 	else{
 		send_error();
