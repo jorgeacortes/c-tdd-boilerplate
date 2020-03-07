@@ -41,12 +41,12 @@ include_path_list = [ #TODO: Pending to include all header files recursively?
 
 # Common libraries for both app and test
 library_path_list = [
-    '#/build/src/', 
+    '#/build/src/',
 ]
 
 # For including external libraries
 library_list =[
-    '', 
+    '',
 ]
 
 build_scripts = [
@@ -59,7 +59,7 @@ defines_list = [    # List of defines to include
 ]
 
 # String with all headers files to mock finishing with a space as separation
-mocks_list = (      
+mocks_list = (
     os.path.join(cwd,"src","func1","Mod1.h")
     #os.path.join(cwd,"src","func1","yyyy.h")
 )
@@ -76,24 +76,24 @@ def buildMocks():
     cmockpath = os.path.join(cwd,"vendor","CMock","lib","cmock.rb")
     cmockargs = "-o" + os.path.join(cwd,"tests","cmock.yml")
     cmockCmd = "ruby "+ cmockpath+ " " + cmockargs + " " + mocks_list
-    print cmockCmd
+    print(cmockCmd)
     ret = os.system(cmockCmd)
-    print "********************************************************************************"
-    print "[Info] Finished project.scons mocks creation"
-    print "********************************************************************************"  
+    print("********************************************************************************")
+    print("[Info] Finished project.scons mocks creation")
+    print("********************************************************************************"  )
     exit(ret)
 
 #*************************
 # Script
 #*************************
-print "********************************************************************************"
-print "[Info] Starting project.scons ",datetime.datetime.now()
-print "********************************************************************************"
-print '[Info] cwd = ', cwd
+print("********************************************************************************")
+print("[Info] Starting project.scons ",datetime.datetime.now())
+print("********************************************************************************")
+print('[Info] cwd = ', cwd)
 
 if platform.system()=='Windows':
     tools_list = ['mingw']
-    print '[Info] Windows OS detected: using MinGw'
+    print('[Info] Windows OS detected: using MinGw')
 
 main_env = Environment(
     variables =     vars,               # For input argumetns
@@ -118,7 +118,7 @@ main_env = Environment(
 #*************************
 
 if main_env.GetOption('clean'):
-    print '[Info] Cleaning extra files.'
+    print('[Info] Cleaning extra files.')
     Clean(
         tgtName,                # Target
         [                       # Files or directories to remove
@@ -132,29 +132,29 @@ if main_env['BUILD_TYPE'] == 'debug':
     main_env.Append(
         CCFLAGS = '-g'  # Debug flag
     )
-    print '[Info] Debug build.'
+    print('[Info] Debug build.')
 
 if main_env['BUILD_TYPE'] == 'release':
-    print '[Info] Release build.'
+    print('[Info] Release build.')
 
 if main_env['MOCK'] == 'yes':
-    print '[Info] Creating mocks with CMock.'
+    print('[Info] Creating mocks with CMock.')
     buildMocks()
 
 #*************************
-# Debug console printing
+# Debug console print(ng)
 #*************************
-print "[Info][main_env] CC =", main_env['CC']
-print "[Info][main_env] TARGET_ARCH =", main_env['TARGET_ARCH']
-print "[Info][main_env] CCFLAGS =", main_env['CCFLAGS']
-print "[Info][main_env] CPPDEFINES =", main_env['CPPDEFINES']
+print("[Info][main_env] CC =", main_env['CC'])
+print("[Info][main_env] TARGET_ARCH =", main_env['TARGET_ARCH'])
+print("[Info][main_env] CCFLAGS =", main_env['CCFLAGS'])
+print("[Info][main_env] CPPDEFINES =", main_env['CPPDEFINES'])
 
 # Launch all SConscripts
-print "--------------------------------------------------------------------------------"
+print("--------------------------------------------------------------------------------")
 for script in build_scripts:
     env = main_env.Clone()
     SConscript(script, exports=['env'])
 
-print "********************************************************************************"
-print "[Info] Finished project.scons"
-print "********************************************************************************"
+print("********************************************************************************")
+print("[Info] Finished project.scons")
+print("********************************************************************************")

@@ -11,7 +11,7 @@ unity_path = testRelativePath + '/vendor/Unity/src/'
 cmock_path = testRelativePath + '/vendor/CMock/src/'
 
 # --------------- Support libraries ---------------- #
-print '[SConscript] test.scons'
+print('[SConscript] test.scons')
 
 # Create lib for Unity and CMock
 envTest.Append(
@@ -36,16 +36,16 @@ tests_sources=[
     Glob('mocks/*.c')
 ]
 
-#Printing results of the Glob
-""" print '*******************'
+#Print(ng results of the Glob)
+""" print('*******************')
 for items in tests_sources:
-    print items
+    print(items)
     for i in items:
-        print i
-print '*******************' """
+        print(i)
+print('*******************') """
 
 # Include paths (CPPATHS)
-tests_inc = [ 
+tests_inc = [
     'mocks',
 ]
 
@@ -56,12 +56,12 @@ envTest.Append(
 
 testCodeObjs = []
 if tests_sources[0]: # If the list of files is not empty.
-    print "[Info] tests sources list"
-    print "------------------------"
+    print("[Info] tests sources list")
+    print("------------------------")
     for source in tests_sources:
-        print source[0]
+        print(source[0])
         testCodeObjs.extend(envTest.Object(source))
-    print "--------------------------------------------------------------------------------"
+    print("--------------------------------------------------------------------------------")
 
 # And then we compile the test including the library.
 runner1_bin = envTest.Program(

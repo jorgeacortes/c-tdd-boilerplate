@@ -3,7 +3,7 @@ import os
 Import('env')
 appEnv = env.Clone()
 # --------------- Application SConscript ---------------- #
-print '[SConscript] app.scons'
+print('[SConscript] app.scons')
 
 # Take all sources
 productionCode_sources=[
@@ -13,12 +13,12 @@ productionCode_sources=[
 productionCodeObjs = []
 # Create an object with all sources
 
-print "[Info] app sources list"
-print "------------------------"
+print("[Info] app sources list")
+print("------------------------")
 for source in productionCode_sources:
-    print source[0]
+    print(source[0])
     productionCodeObjs.extend(appEnv.Object(source))
-print "--------------------------------------------------------------------------------"
+print("--------------------------------------------------------------------------------")
 
 Export('productionCodeObjs') # Will be used for compiling tests
 
@@ -32,4 +32,4 @@ if appEnv['TEST_ONLY'] == 'no':
         ]
     )
 else:
-    print   "[Info] Not building the app"
+    print(  "[Info] Not building the app")
