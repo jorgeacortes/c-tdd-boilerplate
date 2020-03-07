@@ -3,42 +3,33 @@
 import os,sys
 
 # Commands
-y=" && "
 cleanCmd = "scons -c"
 mockCmd="scons MOCK=yes"
 prjCmd="scons"
 testsCmd="scons TEST_ONLY=yes"
+appCmd='scons APP_ONLY=yes'
 logCmd = " > build/log.txt 2>&1"
 
-def rebuildTestsOnly():
+def clean():
+    os.system(cleanCmd)
+
+def buildProject():
+    os.system(prjCmd)
+
+def buildApp():
+    os.system(appCmd)
+
+def buildMocksAndTests():
     os.system(
-        "("+
-        cleanCmd+y+
-        mockCmd+y+
-        testsCmd+")"+
-        logCmd
+        mockCmd
+        +testsCmd
     )
 
-def rebuildProject():
-    os.system(
-        "("+
-        cleanCmd+y+
-        mockCmd+y+
-        prjCmd+")"+
-        logCmd
-    )
+def buildMocks():
+    os.system(mockCmd)
 
-def updateProject():
-    os.system(
-        "("+prjCmd+")"+
-        logCmd
-    )
-
-def updateTests():
-    os.system(
-        "("+testsCmd+")"+
-        logCmd
-    )
+def buildTests():
+    os.system(testsCmd)
 
 if __name__ == '__main__':
     globals()[sys.argv[1]]()

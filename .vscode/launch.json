@@ -5,11 +5,30 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Windows MinGw gdb",
+            "name": "Windows MinGw gdb - testRunner1",
             "type": "cppdbg",
             "request": "launch",
-            //"program": "${workspaceFolder}/build/app.exe",
             "program": "${workspaceFolder}/build/testRunner1.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\MinGw\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Windows MinGw gdb - app",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/app.exe",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",

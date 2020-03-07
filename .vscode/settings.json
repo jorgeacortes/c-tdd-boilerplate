@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.scons": "python",
+        "*.sco": "python",
+        "SConscript": "python",
+        "SConstruct": "python",
+        "wscript": "pyhton",
+        "mockmod1.h": "c"
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build app and tests",
+            "type": "shell",
+            "command": "scons",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "scons -c",
+            "problemMatcher": []
+        },
+        {
+            "label": "Create Mocks",
+            "type": "shell",
+            "command": "scons MOCK=yes",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build tests",
+            "type": "shell",
+            "command": "scons TEST_ONLY=yes",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Build app",
+            "type": "shell",
+            "command": "scons APP_ONLY=yes",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Build Mocks and Tests",
+            "type": "shell",
+            "command": "py build.py buildMocksAndTests",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Run all tests - Windows",
+            "type": "shell",
+            "windows": {
+                "command": "./build/testRunner1.exe"
+            },
+            "linux": {
+            "command": "./build/testRunner1"
+            },
+            "presentation": {
+            "reveal": "always",
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}

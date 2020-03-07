@@ -10,6 +10,7 @@ vars.AddVariables(
     EnumVariable('BUILD_TYPE', 'type of build to use', 'debug',  allowed_values=('debug', 'release')),
     EnumVariable('MOCK', 'Launch CMock or not', 'no',  allowed_values=('no', 'yes')),
     EnumVariable('TEST_ONLY', 'Compile only tests', 'no',  allowed_values=('no', 'yes')),
+    EnumVariable('APP_ONLY', 'Compile only app', 'no',  allowed_values=('no', 'yes')),
     )
 
 #*************************
@@ -49,8 +50,11 @@ library_list =[
     '',
 ]
 
-build_scripts = [
+build_app_scripts = [
     'src/app.scons',    # App project
+]
+
+build_test_scripts = [
     'tests/test.scons', # Test project
 ]
 
@@ -151,9 +155,13 @@ print("[Info][main_env] CPPDEFINES =", main_env['CPPDEFINES'])
 
 # Launch all SConscripts
 print("--------------------------------------------------------------------------------")
-for script in build_scripts:
+for script in build_app_scripts:
     env = main_env.Clone()
     SConscript(script, exports=['env'])
+if main_env['APP_ONLY'] == 'no':
+    for script in build_test_scripts:
+        env = main_env.Clone()
+        SConscript(script, exports=['env'])
 
 print("********************************************************************************")
 print("[Info] Finished project.scons")
